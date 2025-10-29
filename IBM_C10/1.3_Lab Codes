@@ -1,0 +1,42 @@
+Task 1    Request the Falcon9 Launch Wiki page from its URL
+
++-------------------------------------------------------------------------------------------------------+
+| First, let's perform an HTTP GET method to request the Falcon9 Launch HTML page, as an HTTP response  |
++-------------------------------------------------------------------------------------------------------+
+
+# use requests.get() method with the provided static_url and headers
+# assign the response to a object
+
+response = requests.get(static_url, headers=headers)
+
++-------------------------------------------------------------------------------------------------------+
+| Create a BeautifulSoup object from the HTML response                                                  |
++-------------------------------------------------------------------------------------------------------+
+
+# Use BeautifulSoup() to create a BeautifulSoup object from a response text content
+
+html_content= response.text
+soup = BeautifulSoup(html_content, 'html.parser')
+
++-------------------------------------------------------------------------------------------------------+
+| Print the page title to verify if the BeautifulSoup object was created properly                       |                                           |
++-------------------------------------------------------------------------------------------------------+
+
+# Use soup.title attribute
+
+print("Full Page Title Tag:", soup.title)
+print("Page Title Text:", soup.title.string)
+
+Task 2    Extract all column/variable names from the HTML table header
+
++-------------------------------------------------------------------------------------------------------+
+| To find all tables on the wiki page                                                                   |
++-------------------------------------------------------------------------------------------------------+
+
+# Use the find_all function in the BeautifulSoup object, with element type `table`
+# Assign the result to a list called `html_tables`
+
+html_tables = []
+tables = soup.find('tbody').find_all('table')
+for table in tables:
+    html.append
