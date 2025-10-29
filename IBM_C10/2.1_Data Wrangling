@@ -1,0 +1,19 @@
+Data Wrangling Overview
+
+Column Outcome
+1.  True ASDS:  the booster successfully landed to a drone ship
+2.  None None
+3.  True RTLS
+4.  False ASDS: the mission outcome was unsuccessfully landed to a drone ship
+5.  True Ocean
+6.  None ASDS
+7.  False Ocean
+8.  False RTLS
+
+Outcome will like be converted to Classes y (either 0 or 1):
+>  0 is a bad outcome, that is, the booster did not land.
+>  1 is a good outcome, that is, the booster did land. 
+The variable Y will represent the classification variable that represents the outcome of each launch. 
+
+Data Wrangling Lab
+
