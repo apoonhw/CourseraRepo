@@ -36,7 +36,63 @@ Task 2    Extract all column/variable names from the HTML table header
 # Use the find_all function in the BeautifulSoup object, with element type `table`
 # Assign the result to a list called `html_tables`
 
-html_tables = []
-tables = soup.find('tbody').find_all('table')
-for table in tables:
-    html.append
+html_tables = soup.find_all('table')
+
++-------------------------------------------------------------------------------------------------------+
+| Starting from the third table is our target table contains the actual launch records                                                                   |
++-------------------------------------------------------------------------------------------------------+
+
+# Let's print the third table and check its content
+
+first_launch_table = html_tables[2]
+print(first_launch_table)
+
++-------------------------------------------------------------------------------------------------------+
+| Iterate through <th> elements and apply extract_column_from_header() to extract column name 1 by 1    |                                                          |
++-------------------------------------------------------------------------------------------------------+
+
+column_names = []
+
+# Apply find_all() function with 'th' element on first_launch_table
+
+rows=first_launch_table.find_all('th')
+
+# Iterate each th element and apply the provided extract_column_from_header() to get a column name
+# Append the Non-empty column name (`if name is not None and len(name) > 0`) into a list called column_names
+
+for row in rows:
+    column_name = extract_column_from_header(row)
+    if column_name is not None and len(column_name)>0:
+        column_names.append(column_name)
+
+# Returns a list of column names from the table, excluding hyperlinked text
+
++-------------------------------------------------------------------------------------------------------+
+| Create an empty dictionary with keys from the extracted column names                                  |                                                          |
++-------------------------------------------------------------------------------------------------------+
+
+launch_dict= dict.fromkeys(column_names)
+
+# Remove an irrelvant column
+del launch_dict['Date and time ( )']
+
+# Let's initial the launch_dict with each value to be an empty list
+launch_dict['Flight No.'] = []
+launch_dict['Launch site'] = []
+launch_dict['Payload'] = []
+launch_dict['Payload mass'] = []
+launch_dict['Orbit'] = []
+launch_dict['Customer'] = []
+launch_dict['Launch outcome'] = []
+
+# Added some new columns
+launch_dict['Version Booster']=[]
+launch_dict['Booster landing']=[]
+launch_dict['Date']=[]
+launch_dict['Time']=[]
+
+
++-------------------------------------------------------------------------------------------------------+
+| Remove noises from table content and extract into launch_dict                                         |                                                          |
++-------------------------------------------------------------------------------------------------------+
+
