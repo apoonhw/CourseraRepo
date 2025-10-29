@@ -1,0 +1,56 @@
+#Step 1  Create variable to contain the URL to target specific endpoint of the API
+
+  For the capstone project, the URL is SpaceX REST API endpoints, which give us data about launches, including rocket used, payload      delivered, launch specifications, landing specifications, and landing outcome.
+
+  Syntax:  static_json_url='file path'
+
+#Step 2  Perform a get request using the REQUEST library to obtain the data
+
+  Syntax                                    Purpose                                             Output    
+  ------                                    -------                                             -------
+  response = requests.get(url)              #Perform a get request                              
+  response.content                          #Return the content of the response                 Text (massive text data)
+  response.status_code                      #Check the number of response code obtained         Int
+
+ #Step 3  Decode response content into JSON format then into dataframe
+ 
+  Syntax                                    Purpose                                             Output    
+  ------                                    -------                                             ------- 
+  response.json()                           #convert the response into JSON Objects             Python library/list of JSON objects 
+  pd.json_normalise(response.json())        #convert JSON objects into dataframe                A df - normalised JSON in a flat table
+  pd.json_normalise(variable_name)
+
+#Step 4  Web Wrangling to clean up the missing or coded data
+...wranglign data using API:
+
+    Use of APIs to target other endpoints to gather data about ID numbers that store data in separate lists, to be used to create dataframes
+    --> columns with unknown IDs: rocket, payloads, launchpad, and cores
+    --> APIs provided:
+
+    API              Purposes                                                    Syntax
+    ---              --------                                                    -------
+    Booster          Returns Booster Name                                        getBoosterVersion(data)
+    Launchpad        Returns Name of Launch Site, and its longtitude/latitude    getLaunchSite(data)        
+    Payload          Returns Mass of Payload and Orbit to go                     getPayloadData(data)
+    Core             Returns a number of insights about the launch               getCoreData(data)
+
+    --> Create empty lists for each expected attributes from these APIs
+    --> Call each of these APIs to save data into these separate lists
+    --> Combine these lists into a dictionary launch_dict
+    --> Convert the dictionary into a dataframe called launch: df = pd.DataFrame(launch_dict)
+
+...sampling data
+
+    Fliter/sample data to remove irrelevant info (i.e. those about Falcon 1 launches)
+
+    df_new = df[df['Column']!='Falcon 1']
+
+...dealing with nulls
+
+    Check no. of NULL values in each column
+
+    df.isnull().sum()      #sum of dataframe returned by isnull() method, which assigns 1=null value, 0 = others
+
+     NULL values in 'PayloadMass' and 'LandingPad'
+     >> replace NULL values in PayloadMass data with calculated mean
+     >> leave the NULL values in LandingPad as it represented when a landing pad is not used
