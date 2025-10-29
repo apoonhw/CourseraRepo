@@ -1,0 +1,55 @@
+Task 1  Display the names of the unique launch sites in the space mission
+
+%sql SELECT DISTINCT(Launch_Site) from SPACEXTBL;
+
+Task 2  Display 5 records where launch sites begin with the string 'CCA'¶
+
+%sql SELECT * from SPACEXTBL WHERE Launch_Site LIKE 'CCA%' LIMIT 5;
+
+Task 3  Display the total payload mass carried by boosters launched by NASA (CRS)¶
+
+%sql SELECT SUM(PAYLOAD_MASS__KG_) AS FilteredTotal FROM SPACEXTBL WHERE Customer = 'NASA (CRS)';
+
+Task 4  Display average payload mass carried by booster version F9 v1.1¶
+
+%sql SELECT AVG(PAYLOAD_MASS__KG_) FROM SPACEXTBL WHERE Booster_Version = 'F9 v1.1';
+
+Task 5  List the date when the first succesful landing outcome in ground pad was acheived.¶
+
+%sql SELECT MIN(DATE) FROM SPACEXTBL WHERE Landing_Outcome = 'Success (ground pad)';
+
+Task 6  List the names of the boosters which have success in drone ship and have payload mass greater than 4000 but less than 6000¶
+
+%sql SELECT DISTINCT(Booster_Version) from SPACEXTBL WHERE Landing_Outcome = 'Success (drone ship)' AND PAYLOAD_MASS__KG_ > 4000 AND PAYLOAD_MASS__KG_ < 6000;
+
+Task 7  List the total number of successful and failure mission outcomes
+
+%sql SELECT Mission_Outcome, COUNT(*) AS Count_of_Mission_Outcomes FROM SPACEXTBL GROUP BY(Mission_Outcome);
+
+Task 8  List all the booster_versions that have carried the maximum payload mass, using a subquery with a suitable aggregate function.
+
+%sql SELECT Booster_Version FROM SPACEXTBL WHERE PAYLOAD_MASS__KG_ = (SELECT MAX(PAYLOAD_MASS__KG_) FROM SPACEXTBL);
+
+Task 9  List the records which will display the month names, failure landing_outcomes in drone ship ,booster versions, launch_site for the months in year 2015.
+
+%%sql
+SELECT 
+    substr(Date, 6, 2) AS Months,
+    Landing_Outcome AS Failure_Landing_Outcomes, 
+    Booster_Version AS Booster_Versions, 
+    Launch_Site AS Launch_Sites
+FROM 
+    SPACEXTBL 
+WHERE 
+    (substr(Date, 0, 5) = '2015') AND (Landing_Outcome = 'Failure (drone ship)');
+
+Task 10  Rank the count of landing outcomes (such as Failure (drone ship) or Success (ground pad)) between the date 2010-06-04 and 2017-03-20, in descending order.¶
+
+%%sql
+SELECT Landing_Outcome, COUNT(*) AS Count_of_Outcome
+FROM 
+    SPACEXTBL
+WHERE DATE BETWEEN '2010-06-04' AND '2017-03-20'
+GROUP BY Landing_Outcome
+ORDER BY Count_of_Outcome DESC;
+
