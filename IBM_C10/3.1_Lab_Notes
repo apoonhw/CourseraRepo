@@ -1,0 +1,23 @@
+Interactive Visual Analytics
+============================
+Interactive visual analytics 
+> enables users to explore and manipulate data in an interactive and real-time way
+> users can find visual patterns faster and more effectively
+> interactive data visualisation or dashboarding can tell a more appealing story
+
+Common interactions include:
+> zoom-in and zoom-out 
+> pan
+> filter
+> search
+> link
+
+***Folium and Ploty Dash will be used to build interactive map and dashboard***
+
+> Folium to analyse launch site geo and proximities 
+  - mark launch sites and their close proximities on an interactive map
+  - explore the map with those markers and try to discover patterns
+  - explain how to choose an optimal launch site
+
+> Plotly Dash to build a dashboard application
+  - includes input components including dropdown list and a range slider to interact with a pie chart and a scatter point chart
