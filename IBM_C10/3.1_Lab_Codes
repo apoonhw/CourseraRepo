@@ -21,3 +21,125 @@ Common interactions include:
 
 > Plotly Dash to build a dashboard application
   - includes input components including dropdown list and a range slider to interact with a pie chart and a scatter point chart
+
+
+Task 1  Mark all launch sites on a map
+======================================
+#Summarise the coordinates for each launch site
+-------------
+# Select relevant sub-columns: `Launch Site`, `Lat(Latitude)`, `Long(Longitude)`, `class`
+spacex_df = spacex_df[['Launch Site', 'Lat', 'Long', 'class']]
+launch_sites_df = spacex_df.groupby(['Launch Site'], as_index=False).first()
+launch_sites_df = launch_sites_df[['Launch Site', 'Lat', 'Long']]
+launch_sites_df
+
+#Create folium circles
+-------------
+# Create a blue circle at NASA Johnson Space Center's coordinate with a popup label showing its name
+circle = folium.Circle(nasa_coordinate, radius=1000, color='#d35400', fill=True).add_child(folium.Popup('NASA Johnson Space Center'))
+# Create a blue circle at NASA Johnson Space Center's coordinate with a icon showing its name
+marker = folium.map.Marker(
+    nasa_coordinate,
+    # Create an icon as a text label
+    icon=DivIcon(
+        icon_size=(20,20),
+        icon_anchor=(0,0),
+        html='<div style="font-size: 12; color:#d35400;"><b>%s</b></div>' % 'NASA JSC',
+        )
+    )
+site_map.add_child(circle)
+site_map.add_child(marker)
+
+#Initiate the map
+-------------
+site_map = folium.Map(location=nasa_coordinate, zoom_start=5)
+
+#Create Circle objects for each sites
+-------------
+for index, row in launch_sites_df.iterrows():
+    circle = folium.Circle(location=[row['Lat'],row['Long']], radius=1000, color='#d35400', fill=True).add_child(folium.Popup(row['Launch Site']))
+    circle.add_to(site_map)
+
+site_map.save('site_map_with_circle.html')
+
+Task 2  Mark the success/failed launches for each site on the map
+=================================================================
+#Classify marker colors
+-------------
+spacex_df['marker_color']=None
+
+for index, row in spacex_df.iterrows():
+    if row['class'] == 1: 
+        spacex_df.loc[index,'marker_color']='green'
+    elif row['class'] == 0:
+        spacex_df.loc[index,'marker_color']='red'
+    
+# Apply a function to check the value of `class` column
+# If class=1, marker_color value will be green
+# If class=0, marker_color value will be red
+spacex_df.tail(10)
+
+#Create Marker Cluster and Marker Objects
+-------------
+# Add marker_cluster to current site_map
+site_map.add_child(marker_cluster)
+
+# for each row in spacex_df data frame
+# create a Marker object with its coordinate
+# and customize the Marker's icon property to indicate if this launch was successed or failed, 
+# e.g., icon=folium.Icon(color='white', icon_color=row['marker_color']
+for index, record in spacex_df.iterrows():
+    # TODO: Create and add a Marker cluster to the site map
+    marker=folium.map.Marker(location=[record['Lat'],record['Long']],
+                             popup = record['Launch Site'],
+                             icon=folium.Icon(color='white',icon_color=record['marker_color'], icon='info-sign'))
+    # marker = folium.Marker(...)
+    marker_cluster.add_child(marker)
+
+site_map
+
+#Save site map with markers
+-------------
+site_map.save('site_map_with_marker_cluster_v2.html')
+
+
+Given codes - MousePosition function and Calculate_distance functions
+=====================================================================
+>> Save map with MousePosition
+site_map.save('site_map_with_MousePosition.html')
+
+Task 3  Mark coastline points, find coordinates and calculate distance to launch sites
+======================================================================================
+
+#Create a dataframe to store the geospatial data for proximity to the launch sites
+proximity_df = launch_sites_df
+proximity_df['coastline_lat']= [28.5623, 28.56319, 28.59017, 34.63466]
+proximity_df['coastline_lon']= [-80.56783, -80.56797, -80.61905, -120.62531]
+
+proximity_df['distance_coastline'] = None
+
+for index, record in proximity_df.iterrows():
+    proximity_df.loc[index,'distance_coastline'] = calculate_distance(record['Lat'], record['Long'],record['coastline_lat'], record['coastline_lon'])
+
+proximity_df
+
+Task 3-[x] Draw Distance Markers and PolyLines to closest coastline points
+===========================================================================
+
+for index, record in proximity_df.iterrows():
+    # Create and add a folium.Marker on your selected closest coastline points on the map and display the distance
+    distance_marker=folium.Marker(location=[record['coastline_lat'],record['coastline_lon']],
+                                  icon=DivIcon(
+                                      icon_size=(20,20),
+                                      icon_anchor=(0,0),
+                                      html='<div style="font-size: 12; color:#d35400;"><b>%s</b></div>' % "{:10.2f} KM".format(record['distance_coastline']),
+                                  )
+                                 )
+    
+    #Create folium.PolyLine objects using the coastline coordinates and launch site coordiantes
+    lines = folium.PolyLine(locations=[(record['coastline_lat'],record['coastline_lon']),(record['Lat'],record['Long'])], color='blue',weight=1)
+    #Add the distance marker and lines to the map
+    site_map.add_child(distance_marker)
+    site_map.add_child(lines)
+#export the resulting map to html file
+site_map.save('site_map_with_distance markers.html')
