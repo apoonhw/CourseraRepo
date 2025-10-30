@@ -143,3 +143,71 @@ for index, record in proximity_df.iterrows():
     site_map.add_child(lines)
 #export the resulting map to html file
 site_map.save('site_map_with_distance markers.html')
+
+Task 3-[x] Add all other markers and lines
+===========================================
+
+Test_list = [
+    {'Launch Site':'CCAFS LC-40','Test_location':'Railway','Test_lat':000, 'Test_long':000, 'Test_distance':None},
+    {'Launch Site':'CCAFS LC-40','Test_location':'Highway','Test_lat':000, 'Test_long':000, 'Test_distance':None},
+    {'Launch Site':'CCAFS LC-40','Test_location':'City','Test_lat':000, 'Test_long':000, 'Test_distance':None},
+    
+    {'Launch Site':'CCAFS SLC-40','Test_location':'Railway','Test_lat':000, 'Test_long':000, 'Test_distance':None},
+    {'Launch Site':'CCAFS SLC-40','Test_location':'Highway','Test_lat':000, 'Test_long':000, 'Test_distance':None},
+    {'Launch Site':'CCAFS SLC-40','Test_location':'City','Test_lat':000, 'Test_long':000, 'Test_distance':None},
+
+    {'Launch Site':'KSC LC-39A','Test_location':'Railway','Test_lat':000, 'Test_long':000, 'Test_distance':None},
+    {'Launch Site':'KSC LC-39A','Test_location':'Highway','Test_lat':000, 'Test_long':000, 'Test_distance':None},
+    {'Launch Site':'KSC LC-39A','Test_location':'City','Test_lat':000, 'Test_long':000, 'Test_distance':None},
+
+    {'Launch Site':'VAFB SLC-4E','Test_location':'Railway','Test_lat':000, 'Test_long':000, 'Test_distance':None},
+    {'Launch Site':'VAFB SLC-4E','Test_location':'Highway','Test_lat':000, 'Test_long':000, 'Test_distance':None},
+    {'Launch Site':'VAFB SLC-4E','Test_location':'City','Test_lat':000, 'Test_long':000, 'Test_distance':None},
+]
+
+Test_df = pd.DataFrame(Test_list)
+
+
+
+
+
+#Calculate distance to a closest city, railway, highway, etc.
+for index, record in Test_df.iterrows():
+    for i in range(len(launch_sites_df)):
+        if record['Launch Site'] == launch_sites_df.loc[i,'Launch Site']:
+            compare_lat = launch_sites_df.loc[index,'Lat']
+            compare_long = launch_sites_df.loc[index,'Long']
+    Test_df.loc[index,'Test_distance'] = calculate_distance(compare_lat, compare_long, record['Test_lat'], record['Test_long'])
+
+Test_df
+
+
+
+
+
+
+# Create a marker with distance to a closest city, railway, highway, etc.
+for index, record in Test_df.iterrows():    
+    distance_marker=folium.Marker(location=[record['Test_lat'],record['Test_long']],
+                                  icon=DivIcon(
+                                      icon_size=(20,20),
+                                      icon_anchor=(0,0),
+                                      html= '<div style="font-size: 12; color:#d35400;"><b>%s</b></div>' % "{:10.2f} KM".format(record['Test_distance']),
+                                  )
+                                 )
+    #Create folium.PolyLine objects using the coastline coordinates and launch site coordiantes
+    if record['Test_location'] = 'Railway':
+        TLine_color = 'red'
+    elif record['Test_location'] = 'Highway': 
+        TLine_color = 'purple'
+    else record['Test_location'] = 'City':
+        TLine_color = 'green'
+    lines = folium.PolyLine(locations=[(record['Test_lat'],record['Test_long']),(record['Test_lat'],record['Test_long'])], color= TLine_color, weight=1)
+    #Add the distance marker and lines to the map
+    site_map.add_child(distance_marker)
+    site_map.add_child(lines)
+
+
+# Save updated map with all markers and line
+site_map.save('SpaceX_map_with all markers.html')
+
