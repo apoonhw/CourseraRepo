@@ -127,7 +127,8 @@ def get_scatter_chart(selected_site, selected_payload_range):
                           hover_name = 'Flight Number',
                           hover_data = ['Launch Site','Payload Mass (kg)','Booster Version','Result'],
                           title = scatter_title,
-                          labels={'Payload Mass (kg)': 'Payload Mass in kg','class':'Launch outcome (0 = unsuccessful; 1 = successful)','Booster Version Category':'Booster Version Category'},
+                          range_x = selected_payload_range,
+                          labels={'Payload Mass (kg)': 'Payload Mass in kg','class':'Launch outcome (0= Failed; 1= Succeeded)','Booster Version Category':'Booster Ver. Category'}
                           )
     return success_scatter
 
