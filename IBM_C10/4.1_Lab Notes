@@ -1,0 +1,148 @@
+Objectives for the lab
+======================
+
+Perform exploratory Data Analysis and determine Training Labels by:
+1.  create a column for the class                  DONE
+2.  Standardize the data                           
+3.  Split into training data and test data
+
+Find best Hyperparameter for:
+1.  SVM
+2.  Classification Trees
+3.  Logistic Regression
+
+Find the method performs best using test data
+
+
+Detailed instructions
+=====================
+Task 1  
+Create a NumPy array from the column Class in data, by applying the method
+to_numpy() then assign it to the variable Y,make sure the output is a Pandas series (only one bracket df['name of column']).
+>> Y = data['Class'].to_numpy()
+>> print('Data type for items stored within Y is: ', Y.dtype)
+>> print('Data type for Y is: ', type(Y))
+
+Task 2
+Standardize the data in X then reassign it to the variable X using the transform provided below.
+transform = preprocessing.StandardScaler()
+>>
+
+Task 3
+We split the data into training and testing data using the function train_test_split. The training data is divided into 
+validation data, a second set used for training data; then the models are trained and hyperparameters are selected using the 
+function GridSearchCV.
+
+>>  Use the function train_test_split to split the data X and Y into training and test data. Set the parameter test_size to 
+    0.2 and random_state to 2. The training data and test data should be assigned to the following labels.
+    >>  X_train, X_test, Y_train, Y_test = train_test_split(X, Y, test_size = 0.2, random_state=2)
+
+>>  We can see we only have 18 test samples.
+Y_test.shape
+
+Task 4
+Create a logistic regression object then create a GridSearchCV object logreg_cv with cv = 10. Fit the object to find the 
+best parameters from the dictionary parameters.
+parameters ={'C':[0.01,0.1,1],
+             'penalty':['l2'],
+             'solver':['lbfgs']}
+lr=LogisticRegression()
+
+We output the GridSearchCV object for logistic regression. We display the best parameters using the data attribute 
+best_params_ and the accuracy on the validation data using the data attribute best_score_.
+print("tuned hpyerparameters :(best parameters) ",logreg_cv.best_params_)
+print("accuracy :",logreg_cv.best_score_)
+
+Task 5
+Calculate the accuracy on the test data using the method score:
+
+
+Lets look at the confusion matrix:
+yhat=logreg_cv.predict(X_test)
+plot_confusion_matrix(Y_test,yhat)
+
+Examining the confusion matrix, we see that logistic regression can distinguish between the different classes. 
+We see that the problem is false positives.
+
+Overview:
+True Postive - 12 (True label is landed, Predicted label is also landed)
+False Postive - 3 (True label is not landed, Predicted label is landed)
+
+Task 6
+Create a support vector machine object then create a GridSearchCV object svm_cv with cv = 10. Fit the object 
+to find the best parameters from the dictionary parameters.
+
+parameters = {'kernel':('linear', 'rbf','poly','rbf', 'sigmoid'),
+              'C': np.logspace(-3, 3, 5),
+              'gamma':np.logspace(-3, 3, 5)}
+svm = SVC()
+
+[......]
+
+print("tuned hpyerparameters :(best parameters) ",svm_cv.best_params_)
+print("accuracy :",svm_cv.best_score_)
+
+Task 7
+Calculate the accuracy on the test data using the method score:
+[......]
+
+We can plot the confusion matrix
+yhat=svm_cv.predict(X_test)
+plot_confusion_matrix(Y_test,yhat)
+
+Task 8
+Create a decision tree classifier object then create a GridSearchCV object tree_cv with cv = 10. 
+Fit the object to find the best parameters from the dictionary parameters.
+
+parameters = {'criterion': ['gini', 'entropy'],
+     'splitter': ['best', 'random'],
+     'max_depth': [2*n for n in range(1,10)],
+     'max_features': ['auto', 'sqrt'],
+     'min_samples_leaf': [1, 2, 4],
+     'min_samples_split': [2, 5, 10]}
+
+tree = DecisionTreeClassifier()
+
+[......]
+
+print("tuned hpyerparameters :(best parameters) ",tree_cv.best_params_)
+print("accuracy :",tree_cv.best_score_)
+
+Task 9
+Calculate the accuracy of tree_cv on the test data using the method score:
+[......]
+
+We can plot the confusion matrix
+yhat = tree_cv.predict(X_test)
+plot_confusion_matrix(Y_test,yhat)
+
+Task 10
+Create a k nearest neighbors object then create a GridSearchCV object knn_cv with cv = 10. 
+Fit the object to find the best parameters from the dictionary parameters.
+
+parameters = {'n_neighbors': [1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
+              'algorithm': ['auto', 'ball_tree', 'kd_tree', 'brute'],
+              'p': [1,2]}
+
+KNN = KNeighborsClassifier()
+
+[......]
+
+print("tuned hpyerparameters :(best parameters) ",knn_cv.best_params_)
+print("accuracy :",knn_cv.best_score_)
+
+Task 11
+Calculate the accuracy of knn_cv on the test data using the method score:
+[......]
+
+We can plot the confusion matrix
+yhat = knn_cv.predict(X_test)
+plot_confusion_matrix(Y_test,yhat)
+
+Task 12
+Find the method performs best:
+
+
+
+
+
