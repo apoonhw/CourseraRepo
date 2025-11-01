@@ -126,3 +126,14 @@ def get_scatter_chart(selected_site, selected_payload_range):
 # Run the app
 if __name__ == '__main__':
     app.run(debug=True)
+
+#Other entries
+>>
+       color_dict_pie = {'KSC LC-39A':'blue', 'CCAFS LC-40':'red', 'VAFB SLC-4E':'green', 'CCAFS SLC-40':'purple'}
+ color_dict_pie ={'Successful Launch':'green','Unsuccessful Launch':'red'}
+
+>>
+
+title = pie_title,
+        color = pie_categories,
+        color_discrete_map = color_dict_pie
