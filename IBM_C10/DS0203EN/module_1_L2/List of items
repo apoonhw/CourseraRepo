@@ -1,0 +1,13 @@
+Lab documents
+
+1.  Lab_1: Data Collection API Lab
+
+    Lab: Collecting the data
+    >>  jupyter-labs-spacex-data-collection-apy.ipynb
+    >>  dataset_part_1.csv
+
+2.  Lab_2:  Data Collection with Web Scraping Lab
+
+    Lab: Web scraping F9 & Falcon Heavy Launch Records from Wikipedia
+    >>  jupyter-labs-spacex-webscraping.ipynb
+    >>  spacex_web_scraped.csv 
